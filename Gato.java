@@ -3,7 +3,7 @@ public class Gato {
     private String nombre;
     private String raza;
     private int edad;
-    private boolean adoptado;    // Estado de adopción (true = adoptado, false = disponible)
+    private boolean adoptado;
 
     /**
      * Constructor vacío
@@ -25,9 +25,6 @@ public class Gato {
         this.adoptado = adoptado;
     }
 
-    // -----------------------------
-    // Métodos Getters y Setters
-    // -----------------------------
 
     public int getId() {
         return id;

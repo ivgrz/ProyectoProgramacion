@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -7,6 +8,8 @@ public class main {
         private static final List<Cliente> clientes = new ArrayList<>();
         private static final List<Reserva> reservas = new ArrayList<>();
         private static final GatoDAO gatoDAO = new GatoDAO();
+        private static final ClienteDAO clienteDAO = new ClienteDAO();
+        private static final ReservaDAO reservaDAO = new ReservaDAO();
 
         public static void main(String[] args) {
             int opcion;
@@ -59,17 +62,28 @@ public class main {
             String nombre = leerTexto("Nombre del cliente: ");
             String email = leerTexto("Email: ");
             clientes.add(new Cliente(nombre, email));
+            clienteDAO.insertar(new Cliente(nombre, email));
             System.out.println("Cliente registrado.");
         }
 
-        private static void registrarReserva() {
-            String nombre = leerTexto("Nombre del cliente: ");
-            String fecha = leerTexto("Fecha (YYYY-MM-DD): ");
-            reservas.add(new Reserva(nombre, fecha));
-            System.out.println("Reserva registrada.");
-        }
+    private static void registrarReserva() {
+        int clienteId = leerEntero("ID del cliente: ");
+        int gatoId = leerEntero("ID del gato: ");
+        String fechaTexto = leerTexto("Fecha (YYYY-MM-DD): ");
+        String comentario = leerTexto("Comentario: ");
 
-        private static String leerTexto(String mensaje) {
+        try {
+            LocalDate fecha = LocalDate.parse(fechaTexto);
+            Reserva reserva = new Reserva(clienteId, gatoId, fecha, comentario);
+            reservaDAO.insertar(reserva);
+            System.out.println(" Reserva registrada correctamente.");
+        } catch (Exception e) {
+            System.out.println(" Error al registrar la reserva: " + e.getMessage());
+        }
+    }
+
+
+    private static String leerTexto(String mensaje) {
             System.out.print(mensaje);
             return scanner.nextLine();
         }

@@ -2,6 +2,7 @@
 public class Cliente {
     private String nombre;
     private String email;
+    private int id;
 
     public Cliente() {
     }
@@ -30,6 +31,14 @@ public class Cliente {
     @Override
     public String toString() {
         return nombre + " - " + email;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 }
 

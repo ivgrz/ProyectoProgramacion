@@ -1,53 +1,42 @@
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GatoDAO {
 
-    public GatoDAO() {
-        crearTablaSiNoExiste();
-    }
-
-    private void crearTablaSiNoExiste() {
-        String sql = """
-            CREATE TABLE IF NOT EXISTS gatos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL,
-                raza TEXT,
-                edad INTEGER,
-                adoptado BOOLEAN
-            )
-            """;
-
-        try (Connection conn = BaseDatos.conectar();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void insertar(Gato gato) {
+        Connection conexion = BaseDatos.conectar();
+        if (conexion == null) {
+            System.out.println("❌ No se pudo establecer conexión. Inserción cancelada.");
+            return;
+        }
+
         String sql = "INSERT INTO gatos(nombre, raza, edad, adoptado) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = BaseDatos.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, gato.getNombre());
             ps.setString(2, gato.getRaza());
             ps.setInt(3, gato.getEdad());
             ps.setBoolean(4, gato.isAdoptado());
             ps.executeUpdate();
+            System.out.println("✅ Gato insertado con éxito.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("❌ Error al insertar el gato: " + e.getMessage());
         }
     }
 
     public List<Gato> listarTodos() {
-        List<Gato> gatos = new ArrayList<>();
+        List<Gato> lista = new ArrayList<>();
+        Connection conexion = BaseDatos.conectar();
+        if (conexion == null) {
+            System.out.println("❌ No se pudo establecer conexión. Listado cancelado.");
+            return lista;
+        }
+
         String sql = "SELECT * FROM gatos";
 
-        try (Connection conn = BaseDatos.conectar();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = conexion.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -57,13 +46,14 @@ public class GatoDAO {
                 g.setRaza(rs.getString("raza"));
                 g.setEdad(rs.getInt("edad"));
                 g.setAdoptado(rs.getBoolean("adoptado"));
-                gatos.add(g);
+                lista.add(g);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(" Error al listar gatos: " + e.getMessage());
         }
 
-        return gatos;
+        return lista;
     }
 }
+

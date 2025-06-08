@@ -1,22 +1,23 @@
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-    /**
-     * Clase para gestionar la conexión con la base de datos SQLite.
-     */
-    public class BaseDatos {
-        // Ruta del archivo de base de datos
-        private static final String URL = "jdbc:sqlite:catcafe.db";
+public class BaseDatos {
 
-        /**
-         * Establece y devuelve una conexión con la base de datos SQLite.
-         * @return Objeto Connection listo para usar en consultas.
-         * @throws SQLException si ocurre un error al conectar.
-         */
-        public static Connection conectar() throws SQLException {
-            return DriverManager.getConnection(URL);
+    private static final String URL = "jdbc:postgresql://aws-0-eu-north-1.pooler.supabase.com:5432/postgres";
+    private static final String USUARIO = "postgres.vegnfvaoqwgpwruvzmez";
+    private static final String CONTRASENA = "Puertablanca14";
+
+    public static Connection conectar() {
+        try {
+            return DriverManager.getConnection(URL, USUARIO, CONTRASENA);
+        } catch (SQLException e) {
+            System.out.println("❌ Error al conectar con PostgreSQL: " + e.getMessage());
+            return null;
         }
     }
+}
+
 
 
